@@ -1,6 +1,10 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+
 
 public class Clash : MonoBehaviour
 {
@@ -24,6 +28,9 @@ public class Clash : MonoBehaviour
     public Image JUp;
     public GameObject keys;
 
+    public Image shawWin, mawWin;
+    public Button restart;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,6 +40,10 @@ public class Clash : MonoBehaviour
         slider.value = sliderValue;
         countDown.enabled = false;
         timerText.enabled = false;
+        shawWin.enabled = false;
+        mawWin.enabled = false;
+        restart.gameObject.SetActive(false);
+        restart.interactable = false;
     }
 
     // Update is called once per frame
@@ -43,7 +54,7 @@ public class Clash : MonoBehaviour
             time -= Time.deltaTime;
 
             countDown.enabled = true;
-            for (int i = 3; i+6 > time; i--) 
+            for (int i = 3; i + 6 > time; i--)
             {
                 if (i <= -1)
                 {
@@ -51,29 +62,30 @@ public class Clash : MonoBehaviour
                     break;
                 }
 
-                if(i <= 0) 
+                if (i <= 0)
                 {
                     countDown.text = "START";
                     continue;
                 }
                 countDown.text = (i).ToString();
             }
-            
+
             if (time <= 5 && time >= 0)
             {
                 Counter();
                 timerText.enabled = true;
                 timerText.text = time.ToString("F0");
             }
-            
+
             if (time <= 0)
             {
                 time = 0;
                 timerText.enabled = false;
                 keys.SetActive(false);
                 Collide();
+                Winner();
             }
-        }  
+        }
     }
 
     public void Collide()
@@ -103,7 +115,7 @@ public class Clash : MonoBehaviour
         {
             JUp.enabled = true;
         }
-    
+
 
         totalCount = shawCounter + mawCounter;
         if (totalCount > 0)
@@ -115,5 +127,47 @@ public class Clash : MonoBehaviour
             sliderValue = 0.5f;
         }
         slider.value = sliderValue;
+    }
+
+    public void Winner()
+    {
+        if (mawCounter > shawCounter)
+        {
+            mawAnimator.SetBool("Win", true);
+            shawAnimator.SetBool("Loss", true);
+            Invoke("MawVictory", 3f);
+        }
+
+        if (shawCounter > mawCounter)
+        {
+            mawAnimator.SetBool("Loss", true);
+            shawAnimator.SetBool("Win", true);
+            Invoke("ShawVictory", 3f);
+        }
+    }
+
+    private void MawVictory()
+    {
+        mawAnimator.SetBool("Victory", true);
+        mawWin.enabled = true;
+        mawAnimator.transform.rotation = Quaternion.Euler(0, 0, 0);
+        restart.gameObject.SetActive(true); 
+        restart.interactable = true;        
+
+    }
+
+    private void ShawVictory()
+    {
+        shawAnimator.SetBool("Victory", true);
+        shawWin.enabled = true;
+        shawAnimator.transform.rotation = Quaternion.Euler(0, 0, 0);
+        restart.gameObject.SetActive(true); 
+        restart.interactable = true;        
+
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
