@@ -23,6 +23,7 @@ public class Clash : MonoBehaviour
     public float time = 9f;
     public TextMeshProUGUI countDown;
     public TextMeshProUGUI timerText;
+    public GameObject mawStats, shawStats;
 
     public Image FUp;
     public Image JUp;
@@ -44,6 +45,8 @@ public class Clash : MonoBehaviour
         mawWin.enabled = false;
         restart.gameObject.SetActive(false);
         restart.interactable = false;
+        shawStats.gameObject.SetActive(false);
+        mawStats.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -152,7 +155,9 @@ public class Clash : MonoBehaviour
         mawWin.enabled = true;
         mawAnimator.transform.rotation = Quaternion.Euler(0, 0, 0);
         restart.gameObject.SetActive(true); 
-        restart.interactable = true;        
+        restart.interactable = true;  
+        
+        mawStats.gameObject.SetActive(true);
 
     }
 
@@ -162,7 +167,9 @@ public class Clash : MonoBehaviour
         shawWin.enabled = true;
         shawAnimator.transform.rotation = Quaternion.Euler(0, 0, 0);
         restart.gameObject.SetActive(true); 
-        restart.interactable = true;        
+        restart.interactable = true;   
+        
+        shawStats.gameObject.SetActive(true);
 
     }
 
