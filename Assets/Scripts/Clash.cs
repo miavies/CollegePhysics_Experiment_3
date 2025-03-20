@@ -29,11 +29,11 @@ public class Clash : MonoBehaviour
     public Image JUp;
     public GameObject keys;
 
-    public Image shawWin, mawWin;
+    public Image shawWin, mawWin, draw;
     public Button restart;
 
-    public float sliderSpeed = 5f; 
-    public float influenceAmount = 0.1f; 
+    public float sliderSpeed = 5f;
+    public float influenceAmount = 0.1f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -47,6 +47,7 @@ public class Clash : MonoBehaviour
         timerText.enabled = false;
         shawWin.enabled = false;
         mawWin.enabled = false;
+        draw.enabled = false;
         restart.gameObject.SetActive(false);
         restart.interactable = false;
         shawStats.gameObject.SetActive(false);
@@ -157,34 +158,62 @@ public class Clash : MonoBehaviour
             shawAnimator.SetBool("Win", true);
             Invoke("ShawVictory", 3f);
         }
+
+        if(shawCounter == mawCounter)
+        {
+            Invoke("Draw", 2f);
+        }
+
     }
 
     private void MawVictory()
     {
         mawAnimator.SetBool("Victory", true);
         mawWin.enabled = true;
-        mawAnimator.transform.rotation = Quaternion.Euler(0, 0, 0);
-        restart.gameObject.SetActive(true); 
-        restart.interactable = true;  
-        
-        mawStats.gameObject.SetActive(true);
+        StartCoroutine(RotateSmoothly(mawAnimator.transform, Quaternion.Euler(0, 0, 0), 5f));
 
+        restart.gameObject.SetActive(true);
+        restart.interactable = true;
+        mawStats.gameObject.SetActive(true);
     }
 
     private void ShawVictory()
     {
         shawAnimator.SetBool("Victory", true);
         shawWin.enabled = true;
-        shawAnimator.transform.rotation = Quaternion.Euler(0, 0, 0);
-        restart.gameObject.SetActive(true); 
-        restart.interactable = true;   
-        
-        shawStats.gameObject.SetActive(true);
+        StartCoroutine(RotateSmoothly(shawAnimator.transform, Quaternion.Euler(0, 0, 0), 5f));
 
+        restart.gameObject.SetActive(true);
+        restart.interactable = true;
+        shawStats.gameObject.SetActive(true);
     }
+
+    private void Draw()
+    {
+        draw.enabled = true;
+        restart.gameObject.SetActive(true);
+        restart.interactable = true;
+    }
+
 
     public void ResetGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    private IEnumerator RotateSmoothly(Transform character, Quaternion targetRotation, float duration)
+    {
+        float time = 0;
+        Quaternion startRotation = character.rotation;
+
+        while (time < duration)
+        {
+            character.rotation = Quaternion.Lerp(startRotation, targetRotation, time / duration);
+            time += Time.deltaTime;
+            yield return null; // Wait for the next frame
+        }
+
+        character.rotation = targetRotation; // Ensure exact final rotation
+    }
+
 }
