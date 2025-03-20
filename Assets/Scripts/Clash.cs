@@ -32,6 +32,10 @@ public class Clash : MonoBehaviour
     public Image shawWin, mawWin;
     public Button restart;
 
+    public float sliderSpeed = 5f; 
+    public float influenceAmount = 0.1f; 
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -47,6 +51,7 @@ public class Clash : MonoBehaviour
         restart.interactable = false;
         shawStats.gameObject.SetActive(false);
         mawStats.gameObject.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -99,10 +104,14 @@ public class Clash : MonoBehaviour
 
     public void Counter()
     {
+        bool shawPressed = false;
+        bool mawPressed = false;
+
         if (Input.GetKeyDown(KeyCode.F))
         {
             shawCounter++;
             FUp.enabled = false;
+            shawPressed = true;
         }
         if (Input.GetKeyUp(KeyCode.F))
         {
@@ -113,23 +122,24 @@ public class Clash : MonoBehaviour
         {
             mawCounter++;
             JUp.enabled = false;
+            mawPressed = true;
         }
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetKeyUp(KeyCode.J))
         {
             JUp.enabled = true;
         }
 
+        if (shawPressed && !mawPressed)
+        {
+            sliderValue += influenceAmount;
+        }
+        else if (mawPressed && !shawPressed)
+        {
+            sliderValue -= influenceAmount;
+        }
+        sliderValue = Mathf.Clamp(sliderValue, 0f, 1f);
 
-        totalCount = shawCounter + mawCounter;
-        if (totalCount > 0)
-        {
-            sliderValue = (float)shawCounter / totalCount;
-        }
-        else
-        {
-            sliderValue = 0.5f;
-        }
-        slider.value = sliderValue;
+        slider.value = Mathf.Lerp(slider.value, sliderValue, Time.deltaTime * sliderSpeed);
     }
 
     public void Winner()
