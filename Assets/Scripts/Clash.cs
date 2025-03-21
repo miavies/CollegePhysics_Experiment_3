@@ -170,7 +170,7 @@ public class Clash : MonoBehaviour
     {
         mawAnimator.SetBool("Victory", true);
         mawWin.enabled = true;
-        StartCoroutine(RotateSmoothly(mawAnimator.transform, Quaternion.Euler(0, 0, 0), 5f));
+        StartCoroutine(RotateSmoothly(mawAnimator.transform, Quaternion.Euler(0, 0, 0), 0.5f));
 
         restart.gameObject.SetActive(true);
         restart.interactable = true;
@@ -181,7 +181,7 @@ public class Clash : MonoBehaviour
     {
         shawAnimator.SetBool("Victory", true);
         shawWin.enabled = true;
-        StartCoroutine(RotateSmoothly(shawAnimator.transform, Quaternion.Euler(0, 0, 0), 5f));
+        StartCoroutine(RotateSmoothly(shawAnimator.transform, Quaternion.Euler(0, 0, 0), 0.5f));
 
         restart.gameObject.SetActive(true);
         restart.interactable = true;
